@@ -1,0 +1,483 @@
+:root {
+    --primary-color: #6C63FF;
+    --hover-color: #5A52E0;
+    --background-color: #F0F2F5;
+    --card-background: #FFFFFF;
+    --text-color: #2C3E50;
+    --shadow-color: rgba(108, 99, 255, 0.2);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+    background: var(--background-color);
+    background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    background: var(--card-background);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    animation: fadeIn 0.8s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.btn {
+    background: var(--primary-color);
+    color: white;
+    padding: 18px 30px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    transform-origin: center;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: -100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
+}
+
+.btn:hover::after {
+    left: 100%;
+}
+
+.btn:hover {
+    background: var(--hover-color);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px var(--shadow-color);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+}
+
+.start-btn, .next-btn {
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 15px;
+    background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
+}
+
+.hide {
+    display: none;
+}
+
+h1 {
+    text-align: center;
+    color: var(--text-color);
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+h2 {
+    color: var(--text-color);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+#question {
+    animation: slideDown 0.5s ease;
+}
+
+#result {
+    text-align: center;
+    padding: 30px;
+}
+
+#profession-result {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 12px;
+    background: rgba(108, 99, 255, 0.1);
+    animation: pulse 2s infinite;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.answer-btn {
+    position: relative;
+    animation: slideIn 0.4s ease;
+    transition: all 0.3s ease;
+}
+
+.answer-btn::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-color);
+    border-radius: inherit;
+    opacity: 0;
+    z-index: -1;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+}
+
+.answer-btn:hover::before {
+    opacity: 0.1;
+    transform: scale(1);
+}
+
+.answer-btn.selected {
+    background: var(--primary-color);
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+.answer-btn.selected::before {
+    opacity: 0.2;
+    transform: scale(1.05);
+}
+
+.answer-btn.confirmed {
+    pointer-events: none;
+}
+
+.answer-btn.confirmed::before {
+    opacity: 1;
+}
+
+.answer-btn.confirmed::after {
+    animation: none;
+}
+
+.answer-btn.fade-out {
+    animation: fadeOut 0.5s ease forwards;
+}
+
+.confirm-btn {
+    margin-top: 20px;
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUpFade 0.3s ease forwards;
+}
+
+.confirm-btn:hover {
+    background: linear-gradient(45deg, #27ae60, #219a52);
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0.3;
+        transform: scale(0.95);
+    }
+}
+
+@keyframes slideUpFade {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Добавляем эффект пульсации для выбранного ответа */
+.answer-btn.selected::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: inherit;
+    border: 2px solid var(--primary-color);
+    animation: pulse-border 1.5s infinite;
+}
+
+@keyframes pulse-border {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    70% {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+}
+
+/* Добавляем анимацию для перехода между вопросами */
+#question-container {
+    position: relative;
+}
+
+#question-container.transitioning {
+    animation: transitionOut 0.3s ease-out;
+}
+
+@keyframes transitionOut {
+    to {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+}
+
+/* Улучшаем анимацию результата */
+#result {
+    position: relative;
+    overflow: hidden;
+}
+
+#result::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, var(--primary-color), transparent);
+    opacity: 0.1;
+    transform: translateX(-100%);
+    animation: resultGlow 2s ease infinite;
+}
+
+@keyframes resultGlow {
+    0% {
+        transform: translateX(-100%);
+    }
+    50% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Добавляем анимацию загрузки */
+.loading {
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    border: 3px solid var(--primary-color);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Улучшаем отзывчивость на мобильных устройствах */
+@media (hover: hover) {
+    .btn:hover {
+        transform: translateY(-3px) scale(1.02);
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Адаптация под мобильные устройства */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    .container {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        padding: 15px 25px;
+        font-size: 1rem;
+    }
+
+    .start-btn, .next-btn {
+        font-size: 1.2rem;
+    }
+
+    #profession-result {
+        font-size: 1.1rem;
+        padding: 15px;
+    }
+}
+
+/* Поддержка темной темы */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #1A1A1A;
+        --card-background: #2D2D2D;
+        --text-color: #FFFFFF;
+        --shadow-color: rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+        background-image: linear-gradient(135deg, #1a1a1a 0%, #363636 100%);
+    }
+
+    .container {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #profession-result {
+        background: rgba(108, 99, 255, 0.15);
+    }
+}
+
+/* Анимация для кнопок при фокусе */
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--shadow-color);
+}
+
+/* Анимация загрузки результата */
+.result-appear {
+    animation: resultAppear 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes resultAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: var(--background-color);
+    border-radius: 5px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+#progress-fill {
+    height: 100%;
+    background: var(--primary-color);
+    border-radius: 5px;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+#progress-text {
+    position: absolute;
+    top: -25px;
+    right: 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.back-btn {
+    background: var(--background-color);
+    color: var(--text-color);
+}
+
+.back-btn:hover {
+    background: var(--hover-color);
+    color: white;
+}
+
+/* Стили для неподтвержденных ответов при возврате */
+.answer-btn.selected:not(.confirmed) {
+    background: var(--primary-color);
+} 
