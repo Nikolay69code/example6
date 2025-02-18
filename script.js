@@ -428,9 +428,24 @@ function showResult() {
     questionContainer.classList.add('hide');
     resultElement.classList.remove('hide');
     
+    // Проверяем, есть ли у пользователя какие-либо ответы
+    const hasAnswers = selectedAnswers.some(answer => answer !== null && answer.confirmed);
+    
+    if (!hasAnswers) {
+        // Если нет ответов, выдаем стандартное сообщение
+        professionResult.innerText = 'Пожалуйста, ответьте на вопросы, чтобы узнать, какая профессия вам подходит.';
+        return;
+    }
+
     const maxScore = Math.max(...Object.values(scores));
     const profession = Object.keys(scores).find(key => scores[key] === maxScore);
     
+    // Если нет подходящей профессии, показываем сообщение "Вы мастер на все руки"
+    if (!profession) {
+        professionResult.innerText = 'Вы мастер на все руки!';
+        return;
+    }
+
     const results = {
         ai_specialist: 'Вам подходит профессия AI-специалиста! Вы можете создавать будущее с помощью искусственного интеллекта.',
         data_scientist: 'Data Scientist - ваше призвание! Вы умеете находить ценные инсайты в данных.',
@@ -489,7 +504,10 @@ function showResult() {
         synthetic_bio: 'Synthetic Bio Specialist - ваше призвание! Вы создаете синтетические биологические решения.'
     };
     
-    professionResult.innerText = results[profession];
+    professionResult.innerText = results[profession] || 'Вы мастер на все руки!';
+
+    // Показываем кнопку "Пройти тест еще раз"
+    document.getElementById('restart-btn').classList.remove('hide');
 }
 
 function shareResult() {
@@ -515,30 +533,10 @@ function goBack() {
             button.addEventListener('click', () => selectOption(button, answer));
         });
 
-        // Восстанавливаем предыдущий выбор
-        const previousSelection = selectedAnswers[currentQuestionIndex];
-        if (previousSelection) {
-            const buttons = answerButtonsElement.children;
-            for (let button of buttons) {
-                if (button.textContent === previousSelection.answer.text) {
-                    selectedButton = button;
-                    button.classList.add('selected');
-                    if (previousSelection.confirmed) {
-                        button.classList.add('confirmed');
-                        button.disabled = true;
-                        Array.from(buttons).forEach(b => {
-                            if (b !== button) {
-                                b.classList.add('fade-out');
-                                b.disabled = true;
-                            }
-                        });
-                    } else {
-                        document.getElementById('confirm-btn').classList.remove('hide');
-                    }
-                    break;
-                }
-            }
-        }
+        // Сбрасываем состояние выбранного ответа
+        selectedAnswers[currentQuestionIndex] = null; // Сбрасываем выбранный ответ
+        selectedButton = null; // Сбрасываем выбранную кнопку
+        document.getElementById('confirm-btn').classList.add('hide'); // Скрываем кнопку подтверждения
     }
     
     if (currentQuestionIndex === 0) {
@@ -548,3 +546,13 @@ function goBack() {
 
 // Добавляем обработчик для кнопки "Назад"
 document.getElementById('back-btn').addEventListener('click', goBack);
+
+// Добавляем обработчик для кнопки "Пройти тест еще раз"
+document.getElementById('restart-btn').addEventListener('click', () => {
+    // Сбрасываем все состояния
+    startButton.classList.remove('hide');
+    resultElement.classList.add('hide');
+    questionContainer.classList.add('hide');
+    scores = {}; // Сбросим все очки
+    selectedAnswers = new Array(QUESTIONS_COUNT).fill(null); // Сбросим выбранные ответы
+});
